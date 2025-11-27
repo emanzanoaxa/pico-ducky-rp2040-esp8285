@@ -1,0 +1,30 @@
+# License : GPLv2.0
+# copyright (c) 2023  Dave Bailey
+# Author: Dave Bailey (dbisu, @daveisu)
+# Pico and Pico W board support
+
+from board import *
+import board
+import digitalio
+import storage
+
+noStorage = False
+noStoragePin = digitalio.DigitalInOut(GP15)
+noStoragePin.switch_to_input(pull=digitalio.Pull.UP)
+noStorageStatus = noStoragePin.value
+print("noStorageStatus:", noStorageStatus)
+
+# If GP15 is not connected, it will default to being pulled high (True)
+# If GP is connected to GND, it will be low (False)
+#   GP15 not connected == USB NOT visible
+#   GP15 connected to GND == USB visible
+
+noStorage = noStorageStatus
+
+if(noStorage == True):
+    # don't show USB drive to host PC
+    storage.disable_usb_drive()
+    print("Disabling USB drive")
+else:
+    # normal boot
+    print("USB drive enabled")
